@@ -1,1 +1,211 @@
-
+(function(define)
+	repeat
+		game:GetService("RunService").Heartbeat:wait()
+	until game:IsLoaded();
+	local function check_exploit()  --> 检查注入器配置, 如果注入器不行就不能加载脚本
+		if not getgenv then
+			return false;
+		end
+		return true;
+	end
+	local whitelisted = false;
+	
+	
+	local _CONFIGS = {  --> 游戏配置列表, 如果不懂请勿修改, 可以改数字
+	   ["UI_NAME"] = define,
+	   ["总开关"] = nil,
+	   ["防误触开关"] = true,
+	   ["cutPlankByHONG"] = nil,
+	   ["无限跳"] = false,
+	   ["穿墙开关"] = false,
+	   ["飞行开关"] = false,
+	   ["isBuying"] = false,
+	   ["取消购买"] = false,
+	   ["处理木头"] = false,
+	   ["处理木头并加工"] = false,
+	   ["点击砍树"] = false,
+	   ["填充工具"] = false,
+	   ["刷粉车"] = false,
+	   ["粉车器"] = nil,
+	   ["自动砍树"] = nil,
+	   ["UI长"] = 250,
+	   ["UI宽"] = 300,
+	   ["传送模式"] = 2,
+	   ["飞行速度"] = 4,
+	   ["步行速度"] = 16,
+	   ["跳跃力"] = 50,  --> 比如这个50  代表加载脚本初始的跳跃力是50, 可以改 100或者150等等
+	   ["悬浮高度"] = 0,
+	   ["重力"] = 198,
+	   ["相机焦距"] = 100,
+	   ["广角"] = 70,
+	};
+	
+	local function ClearConfig()  --> 清除游戏配置功能
+		if _CONFIGS["总开关"] ~= nil then
+			_CONFIGS["总开关"]:Disconnect()
+			_CONFIGS["总开关"] = nil;
+			_CONFIGS["防误触开关"] = nil;
+			_CONFIGS["无限跳"] = false;
+			_CONFIGS["穿墙开关"] = false;
+			_CONFIGS["UI长"] = 250;
+			_CONFIGS["UI宽"] = 300;
+			_CONFIGS["飞行速度"] = 4
+			_CONFIGS["飞行开关"] = false
+			_CONFIGS["isBuying"] = false;
+			getgenv()["点击出售木头"] = false;
+			_CONFIGS["取消购买"] = false;
+			_CONFIGS["传送模式"] = 2;
+			_CONFIGS["处理木头"] = false;
+			_CONFIGS["处理木头并加工"] = false
+			_CONFIGS["点击砍树"] = false;
+			_CONFIGS["填充工具"] = false
+			_CONFIGS["刷粉车"] = false
+			if getgenv().Test then
+				getgenv().Test:Disconnect();
+				getgenv().Test = nil;
+			end
+			if getgenv().CutWoodToSawmill then
+				getgenv().CutWoodToSawmill:Disconnect()
+				getgenv().CutWoodToSawmill = nil
+			end
+			if _G.HardDraggerConnection then
+				_G.HardDraggerConnection:Disconnect()
+				_G.HardDraggerConnection = nil
+			end
+			if _CONFIGS["cutPlankByHONG"] then
+				_CONFIGS["cutPlankByHONG"]:Disconnect();
+				_CONFIGS["cutPlankByHONG"] = nil;
+			end
+			if _G.OrigDrag then
+				_G.OrigDrag = nil
+			end
+			if clickSellLog then
+				clickSellLog:Disconnect();
+				clickSellLog = nil;
+			end
+			if mod then
+				mod:Disconnect();
+				mod = nil;
+			end
+			if _CONFIGS["自动砍树"] then
+				_CONFIGS["自动砍树"]:Disconnect();
+				_CONFIGS["自动砍树"] = nil;
+			end
+			if DayOfNight then
+			    DayOfNight:Disconnect()
+			    DayOfNight = nil
+			end
+			if getgenv().PlankToBp then
+			    getgenv().PlankToBp:Disconnect()
+			    getgenv().PlankToBp = nil
+			end
+			if _CONFIGS["粉车器"] then
+				_CONFIGS["粉车器"]:Disconnect();
+				_CONFIGS["粉车器"] = nil;
+			end
+		end
+	end
+	ClearConfig()
+	
+	function ifError(msg)
+		warn("脚本出问题辣!")
+		writefile(string.format("走马观花错误日志%s.txt", os.date():sub(11):gsub(" ", "-")), string.format("具体错误原因为:\n %s", msg))
+	end
+	
+	local HONG = {
+		GS = function(...)
+			return game.GetService(game, ...);
+		end;
+	}
+	
+	
+	HONG.RS = HONG.GS"RunService"
+	HONG.RES = HONG.GS"ReplicatedStorage"
+	HONG.LIGHT = HONG.GS"Lighting"
+	HONG.TPS = HONG.GS"TeleportService"
+	HONG.LP = HONG.GS"Players".LocalPlayer
+	HONG.WKSPC = HONG.GS"Workspace"
+	HONG.COREGUI = HONG.GS "CoreGui";
+	local Mouse = HONG.LP:GetMouse()
+	
+	
+	function HONG:printf(...)
+		print(string.format(...));
+	end
+	
+	function HONG:SelectNotify(...)
+		local Args = {
+			...
+		}
+		local NotificationBindable = Instance.new("BindableFunction")
+		NotificationBindable.OnInvoke = Args[6]
+		game.StarterGui:SetCore("SendNotification", {
+			Title = Args[1],
+			Text = Args[2],
+			Icon = nil,
+			Duration = Args[5],
+			Button1 = Args[3],
+			Button2 = Args[4],
+			Callback = NotificationBindable
+		})
+		return Args
+	end
+	
+	
+	function HONG:DragModel(...)  --> 移动模型功能
+		local Args = {
+			...
+		};
+		assert(Args[1]:IsA("Model") == true, "参数1必须是模型!");
+		if _CONFIGS["传送模式"] == 1 then
+			pcall(function()
+				self.RES.Interaction.ClientIsDragging:FireServer(Args[1])
+			end);
+			Args[1]:PivotTo(Args[2]);
+		elseif _CONFIGS["传送模式"] == 2 then
+			pcall(function()
+				self.RES.Interaction.ClientIsDragging:FireServer(Args[1])
+			end);
+			if not Args[1].PrimaryPart then
+				Args[1].PrimaryPart = Args[1]:FindFirstChildOfClass("Part")
+			end
+			Args[1]:SetPrimaryPartCFrame(Args[2])
+		end
+	end
+	
+	function HONG:Teleport(...)  --> 传送功能
+		local Args = {
+			...
+		};
+		if self.LP.Character.Humanoid.SeatPart then
+			spawn(function()
+				for i = 1, 15 do
+					self:DragModel(self.LP.Character.Humanoid.SeatPart.Parent, Args[1]);
+				end
+			end)
+			return;
+		end
+		for i = 1, 3 do
+			self:DragModel(self.LP.Character, Args[1]);
+			task.wait();
+		end
+	end
+	
+	function HONG:TP(x, y, z)
+		self:Teleport(CFrame.new(x, y, z));
+	end
+	
+	function HONG:ServiceTP(ID)  --> 跳转服务器功能, 用于重进服务器
+		HONG.TPS:Teleport(ID, HONG.LP)
+    end
+    
+	local whitelist_table = {};
+    local check_whitelist = function()  --> 检查白名单功能        
+        local url = ""; --> 白名单网址
+        local res = game.HttpGet(game, url);
+        
+    	whitelist_table = loadstring(res)()
+    	
+    	local plr = game:GetService("Players").LocalPlayer;
+    	table.foreach(whitelist_table, function (i,v)
+    	    if 
