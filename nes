@@ -803,7 +803,169 @@ DefaultNotif.Size = UDim2.new(0, 291, 0, 56)
 				}
 				e1.Transparency = 0
 				e4.Visible = true
+			local e7 = {}
+			function e7:NewSeparator()
+				local e8 = dq("Frame")
+				e8.Transparency = 1
+				e8.Size = dn(0, 0, 0, 0)
+				e8.BorderSizePixel = 0
+				e8.Parent = e4
 			end
+			function e7:NewButton(e9, ea)
+				local ea = ea or dr
+				local eb = dq("TextButton")
+				local ec = dq("UICorner")
+				eb.Name = "BtnModule"
+				eb.Parent = e4
+				eb.BackgroundColor3 = dp(52, 62, 72)
+				eb.BorderSizePixel = 0
+				eb.Size = dn(0, 312, 0, 28)
+				eb.AutoButtonColor = false
+				eb.Font = Enum.Font.GothamSemibold
+				eb.Text = "  " .. e9
+				eb.TextColor3 = dp(255, 255, 255)
+				eb.TextSize = 14.000
+				eb.TextXAlignment = Enum.TextXAlignment.Left
+				ec.CornerRadius = dm(0, 6)
+				ec.Name = "BtnModuleCorner"
+				ec.Parent = eb
+				eb.MouseButton1Click:Connect(ea)
+			end
+			function e7:NewToggle(e9, du, ed, ea)
+				local ea = ea or dr
+				local ed = ed or false
+				local ee = dq("TextButton")
+				local ef = dq("UICorner")
+				local eg = dq("Frame")
+				local eh = dq("UIGradient")
+				local ei = dq("UICorner")
+				local ej = dq("Frame")
+				local ek = dq("UICorner")
+				local el = dq("UIGradient")
+				library.flags[du or e9] = {
+					State = false,
+					Callback = ea,
+					SetState = function(self, be)
+						local be = be ~= nil and be or not library.flags:GetState(du)
+						library.flags[du].State = be
+						task.spawn(
+	            function()
+							library.flags[du].Callback(be)
+						end)
+						dv:Tween({
+							Transparency = be and 1 or 0
+						}, eg):Play()
+						dv:Tween({
+							Transparency = be and 0 or 1
+						}, ej):Play()
+					end
+				}
+				ee.Name = "ToggleModule"
+				ee.Parent = e4
+				ee.BackgroundColor3 = dp(52, 62, 72)
+				ee.BorderSizePixel = 0
+				ee.Size = dn(0, 312, 0, 28)
+				ee.AutoButtonColor = false
+				ee.Font = Enum.Font.GothamSemibold
+				ee.Text = "  " .. e9
+				ee.TextColor3 = dp(255, 255, 255)
+				ee.TextSize = 14.000
+				ee.TextXAlignment = Enum.TextXAlignment.Left
+				ef.CornerRadius = dm(0, 6)
+				ef.Name = "ToggleModuleCorner"
+				ef.Parent = ee
+				eg.Name = "OffStatus"
+				eg.Parent = ee
+				eg.BackgroundColor3 = dp(255, 255, 255)
+				eg.BorderSizePixel = 0
+				eg.Position = dn(0.878205061, 0, 0.178571433, 0)
+				eg.Size = dn(0, 34, 0, 18)
+				eh.Color = ColorSequence.new{
+					ColorSequenceKeypoint.new(0.00, dp(255, 83, 83)),
+					ColorSequenceKeypoint.new(0.15, dp(255, 83, 83)),
+					ColorSequenceKeypoint.new(0.62, dp(52, 62, 72)),
+					ColorSequenceKeypoint.new(1.00, dp(52, 62, 72))
+				}
+				eh.Rotation = 300
+				eh.Name = "OffGrad"
+				eh.Parent = eg
+				ei.CornerRadius = dm(0, 4)
+				ei.Name = "OffStatusCorner"
+				ei.Parent = eg
+				ej.Name = "OnStatus"
+				ej.Parent = ee
+				ej.BackgroundColor3 = dp(255, 255, 255)
+				ej.BackgroundTransparency = 1.000
+				ej.BorderSizePixel = 0
+				ej.Position = dn(0.878205121, 0, 0.178571433, 0)
+				ej.Size = dn(0, 34, 0, 18)
+				ej.Transparency = 1
+				ek.CornerRadius = dm(0, 4)
+				ek.Name = "OnStatusCorner"
+				ek.Parent = ej
+				el.Color = ColorSequence.new{
+					ColorSequenceKeypoint.new(0.00, dp(52, 62, 72)),
+					ColorSequenceKeypoint.new(0.38, dp(48, 57, 67)),
+					ColorSequenceKeypoint.new(1.00, dp(53, 255, 134))
+				}
+				el.Rotation = 300
+				el.Name = "OnGrad"
+				el.Parent = ej
+				ee.MouseButton1Click:Connect(
+	    function()
+					library.flags[du or e9]:SetState()
+				end)
+				if ed then
+					library.flags[du or e9]:SetState(ed)
+				end
+			end
+			function e7:NewBind(e9, em, ea)
+				local em = Enum.KeyCode[em]
+				local en = {
+					Return = true,
+					Space = true,
+					Tab = true,
+					Backquote = true,
+					CapsLock = true,
+					Escape = true,
+					Unknown = true
+				}
+				local eo = {
+					RightControl = "Right Ctrl",
+					LeftControl = "Left Ctrl",
+					LeftShift = "Left Shift",
+					RightShift = "Right Shift",
+					Semicolon = ";",
+					Quote = '"',
+					LeftBracket = "[",
+					RightBracket = "]",
+					Equals = "=",
+					Minus = "-",
+					RightAlt = "Right Alt",
+					LeftAlt = "Left Alt"
+				}
+				local ep = em
+				local eq = em and (eo[em.Name] or em.Name) or "None"
+				local er = dq("TextButton")
+				local es = dq("UICorner")
+				local et = dq("TextButton")
+				local eu = dq("UICorner")
+				er.Name = "KeybindModule"
+				er.Parent = e4
+				er.BackgroundColor3 = dp(52, 62, 72)
+				er.BorderSizePixel = 0
+				er.Size = dn(0, 312, 0, 28)
+				er.AutoButtonColor = false
+				er.Font = Enum.Font.GothamSemibold
+				er.Text = "  " .. e9
+				er.TextColor3 = dp(255, 255, 255)
+				er.TextSize = 14.000
+				er.TextXAlignment = Enum.TextXAlignment.Left
+				es.CornerRadius = dm(0, 6)
+				es.Name = "KeybindModuleCorner"
+				es.Parent = er
+				et.Name = "KeybindValue"
+
 			e5.Name = "TabPadding"
 			e5.Parent = e4
 			e5.PaddingTop = dm(0, 6)
