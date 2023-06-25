@@ -1,4 +1,4 @@
-(function(define)
+
 	repeat
 		game:GetService("RunService").Heartbeat:wait()
 	until game:IsLoaded();
