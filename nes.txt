@@ -199,23 +199,6 @@
 		HONG.TPS:Teleport(ID, HONG.LP)
     end
     
-	local whitelist_table = {};
-    local check_whitelist = function()  --> 检查白名单功能        
-        local url = ""; --> 白名单网址
-        local res = game.HttpGet(game, url);
-        
-    	whitelist_table = loadstring(res)()
-    	
-    	local plr = game:GetService("Players").LocalPlayer;
-    	table.foreach(whitelist_table, function (i,v)
-    	    if v == plr.Name  then --> 判断玩家用户名
-    	    	whitelisted = true;
-    	    end
-    	end)
-    end
-    check_whitelist()
-	
-	local function checkModify()
 	
 		local develop = {  --> 脚本开发者列表, 里面双引号填写游戏用户名, 脚本开发者可以免去白名单检查
 			"lixiang_c4",
