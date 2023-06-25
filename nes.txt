@@ -202,9 +202,6 @@
 	
 		local develop = {  --> 脚本开发者列表, 里面双引号填写游戏用户名, 脚本开发者可以免去白名单检查
 			"lixiang_c4",
-			"MIXI_SERVICE1",
-			"MIXI_SERVICE2",
-			"MIXI_SERVICE3",
 			"MIXI_SERVICE4",
 			"wdxsc271319wushx",
 			"jjdkekd30y9",
