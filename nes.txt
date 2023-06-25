@@ -1,15 +1,3 @@
-
-	repeat
-		game:GetService("RunService").Heartbeat:wait()
-	until game:IsLoaded();
-	local function check_exploit()  --> 检查注入器配置, 如果注入器不行就不能加载脚本
-		if not getgenv then
-			return false;
-		end
-		return true;
-	end
-	local whitelisted = false;
-	
 	
 	local _CONFIGS = {  --> 游戏配置列表, 如果不懂请勿修改, 可以改数字
 	   ["UI_NAME"] = define,
