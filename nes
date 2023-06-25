@@ -529,3 +529,284 @@
 			DefaultNotif.ZIndex = 5
 			DefaultNotif.AnchorPoint = Vector2.new(1, 1)
 			DefaultNotif.Visible = false
+DefaultNotif.Size = UDim2.new(0, 291, 0, 56)
+			DefaultNotif.Position = UDim2.new(1, 0, 0.9999999, 0)
+			DefaultNotif.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+			DefaultNotif.Parent = ScreenGui
+			local UiCorner1 = Instance.new("UICorner")
+			UiCorner1.Name = "UiCorner"
+			UiCorner1.Parent = DefaultNotif
+			local Dropshadow1 = Instance.new("UIStroke")
+			Dropshadow1.Name = "Dropshadow"
+			Dropshadow1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			Dropshadow1.Transparency = 0.8
+			Dropshadow1.Thickness = 2
+			Dropshadow1.Color = Color3.fromRGB(20, 20, 20)
+			Dropshadow1.Parent = DefaultNotif
+			local Title1 = Instance.new("TextLabel")
+			Title1.Name = "Title"
+			Title1.Size = UDim2.new(0, 291, 0, 19)
+			Title1.BackgroundTransparency = 1
+			Title1.BorderSizePixel = 0
+			Title1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title1.FontSize = Enum.FontSize.Size14
+			Title1.TextSize = 14
+			Title1.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Title1.Font = Enum.Font.SourceSans
+			Title1.Parent = DefaultNotif
+			local Paragraph1 = Instance.new("TextLabel")
+			Paragraph1.Name = "Paragraph"
+			Paragraph1.Size = UDim2.new(0, 291, 0, 37)
+			Paragraph1.BackgroundTransparency = 1
+			Paragraph1.Position = UDim2.new(0, 0, 0.3392857, 0)
+			Paragraph1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Paragraph1.FontSize = Enum.FontSize.Size14
+			Paragraph1.TextSize = 14
+			Paragraph1.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Paragraph1.Text = ""
+			Paragraph1.TextYAlignment = Enum.TextYAlignment.Top
+			Paragraph1.TextWrapped = true
+			Paragraph1.Font = Enum.Font.SourceSans
+			Paragraph1.TextWrap = true
+			Paragraph1.TextXAlignment = Enum.TextXAlignment.Left
+			Paragraph1.Parent = DefaultNotif
+			local UIPadding1 = Instance.new("UIPadding")
+			UIPadding1.PaddingLeft = UDim.new(0, 10)
+			UIPadding1.PaddingRight = UDim.new(0, 5)
+			UIPadding1.Parent = Paragraph1
+			if syn then
+				syn.protect_gui(ScreenGui)
+			end
+			ScreenGui.Parent = game:GetService("Players").LocalPlayer.PlayerGui
+			return ScreenGui
+		end
+		notificationHolder = createBaseNotifications()
+		notifAmount = 0
+		removedPos = nil
+		function library:SelectNotify(args)
+			args = args or {}
+			args.TweenSpeed = args.TweenSpeed or 1
+			args.TweenInSpeed = args.TweenInSpeed or args.TweenSpeed
+			args.TweenOutSpeed = args.TweenOutSpeed or args.TweenSpeed
+			args.TweenVerticalSpeed = args.TweenVerticalSpeed or args.TweenSpeed
+			args.Title = args.Title or "Title"
+			args.Text = args.Text or "Text"
+			args.TrueText = args.TrueText or "Yes"
+			args.FalseText = args.FalseText or "No"
+			args.Duration = args.Duration or 5
+			args.Callback = args.Callback or function()
+				warn("No callback for notif")
+			end
+		
+		---- arg defining ^
+			notifAmount = notifAmount + 1
+			local track = notifAmount
+			local notifNum = notifAmount
+			local doesExist = true
+			local notif = notificationHolder.ToggleNotif:Clone()
+			local removed = false
+			notif.Parent = notificationHolder
+			notif.Visible = true
+			notif.Position = UDim2.new(1, 300, 1, - 5)
+			notif.Transparency = 0.05
+			notif.True.Text = args.TrueText
+			notif.False.Text = args.FalseText
+			task.spawn(function()
+				task.wait(args.Duration + args.TweenInSpeed)
+				doesExist = false
+			end)
+			notif.True.MouseButton1Click:Connect(function()
+				doesExist = false
+				removed = true
+				notifAmount = notifAmount - 1
+				removedPos = notif.Position.Y.Offset
+				pcall(args.Callback, true)
+			end)
+			notif.False.MouseButton1Click:Connect(function()
+				doesExist = false
+				removed = true
+				notifAmount = notifAmount - 1
+				removedPos = notif.Position.Y.Offset
+				pcall(args.Callback, false)
+			end)
+			notif.Paragraph.Text = args.Text
+			notif.Title.Text = args.Title
+			notif:TweenPosition(UDim2.new(1, - 5, 1, - 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenInSpeed)
+			task.spawn(function()
+				local originalPos = notif.Position
+				while doesExist and task.wait() do
+					local pos = notif.Position
+					if notifAmount > track then
+						notif:TweenPosition(UDim2.new(1, - 5, 1, originalPos.Y.Offset - (65 * (notifAmount - notifNum))), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenVerticalSpeed, true)
+						track = track + 1
+					end
+					if notifAmount < track then
+						if removedPos > pos.Y.Offset then
+							notif:TweenPosition(UDim2.new(1, - 5, 1, originalPos.Y.Offset - (65 * (notifAmount - notifNum))), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenVerticalSpeed, true)
+						else
+							notifNum = notifNum - 1
+						end
+						track = track - 1
+					end
+				end
+				local pos = notif.Position
+				if removed == false then
+					notifAmount = notifAmount - 1
+					removedPos = notif.Position.Y.Offset
+				end
+				notif:TweenPosition(UDim2.new(1, 300, 1, pos.Y.Offset), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenOutSpeed, true)
+				task.wait(args.TweenOutSpeed)
+				notif:Destroy()
+			end)
+		end
+		function library:Notify(args)
+			args = args or {}
+			if removedPos > pos.Y.Offset then
+							notif:TweenPosition(UDim2.new(1, - 5, 1, originalPos.Y.Offset - (65 * (notifAmount - notifNum))), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenVerticalSpeed, true)
+						else
+							notifNum = notifNum - 1
+						end
+						track = track - 1
+					end
+				end
+				local pos = notif.Position
+				if removed == false then
+					notifAmount = notifAmount - 1
+					removedPos = notif.Position.Y.Offset
+				end
+				notif:TweenPosition(UDim2.new(1, 300, 1, pos.Y.Offset), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenOutSpeed, true)
+				task.wait(args.TweenOutSpeed)
+				notif:Destroy()
+			end)
+		end
+		function library:Notify(args)
+			args = args or {}
+			args.TweenSpeed = args.TweenSpeed or 1
+			args.TweenInSpeed = args.TweenInSpeed or args.TweenSpeed
+			args.TweenOutSpeed = args.TweenOutSpeed or args.TweenSpeed
+			args.TweenVerticalSpeed = args.TweenVerticalSpeed or args.TweenSpeed
+			args.Title = args.Title or "Title"
+			args.Text = args.Text or "Text"
+			args.Duration = args.Duration or 5
+		
+		---- arg defining ^
+			notifAmount = notifAmount + 1
+			local track = notifAmount
+			local notifNum = notifAmount
+			local removed = false
+			local doesExist = true
+			local notif = notificationHolder.DefaultNotif:Clone()
+			notif.Parent = notificationHolder
+			notif.Visible = true
+			notif.Position = UDim2.new(1, 300, 1, - 5)
+			notif.Transparency = 0.05
+			notif.InputBegan:Connect(function(InputObject)
+				if InputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+					task.spawn(function()
+						local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0, false, 0)
+						game:GetService("TweenService"):Create(notif, tweenInfo, {
+							Transparency = 0.8
+						}):Play()
+					end)
+					doesExist = false
+					removed = true
+					notifAmount = notifAmount - 1
+					removedPos = notif.Position.Y.Offset
+				end
+			end)
+			task.spawn(function()
+				task.wait(args.Duration + args.TweenInSpeed)
+				doesExist = false
+			end)
+			notif.Paragraph.Text = args.Text
+			notif.Title.Text = args.Title
+			notif:TweenPosition(UDim2.new(1, - 5, 1, - 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenInSpeed)
+			task.spawn(function()
+				local originalPos = notif.Position
+				while doesExist and task.wait() do
+					local pos = notif.Position
+					if notifAmount > track then
+						notif:TweenPosition(UDim2.new(1, - 5, 1, originalPos.Y.Offset - (65 * (notifAmount - notifNum))), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenVerticalSpeed, true)
+						track = track + 1
+					end
+					if notifAmount < track then
+						if removedPos > pos.Y.Offset then
+							notif:TweenPosition(UDim2.new(1, - 5, 1, originalPos.Y.Offset - (65 * (notifAmount - notifNum))), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenVerticalSpeed, true)
+						else
+							notifNum = notifNum - 1
+						end
+						track = track - 1
+					end
+				end
+				local pos = notif.Position
+				if removed == false then
+					notifAmount = notifAmount - 1
+					removedPos = notif.Position.Y.Offset
+				end
+				notif:TweenPosition(UDim2.new(1, 300, 1, pos.Y.Offset), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, args.TweenOutSpeed, true)
+				task.wait(args.TweenOutSpeed)
+				notif:Destroy()
+			end)
+		end
+		function library:CreateTab(dZ)
+			local d_ = dq("TextButton")
+			local e0 = dq("UICorner")
+			local e1 = dq("Frame")
+			local e2 = dq("UICorner")
+			local e3 = dq("UIGradient")
+			local e4 = dq("ScrollingFrame")
+			local e5 = dq("UIPadding")
+			local e6 = dq("UIListLayout")
+			d_.Name = "TabButton"
+			d_.Parent = dK
+			d_.BackgroundColor3 = dp(52, 62, 72)
+			d_.BorderSizePixel = 0
+			d_.Size = dn(0, 94, 0, 28)
+			d_.AutoButtonColor = false
+			d_.Font = Enum.Font.GothamSemibold
+			d_.Text = dZ
+			d_.TextColor3 = dp(255, 255, 255)
+			d_.TextSize = 14.000
+			e0.CornerRadius = dm(0, 6)
+			e0.Name = "TabButtonCorner"
+			e0.Parent = d_
+			e1.Name = "Glow"
+			e1.Parent = d_
+			e1.BackgroundColor3 = dp(255, 255, 255)
+			e1.BorderSizePixel = 0
+			e1.Position = dn(0, 0, 0.928571463, 0)
+			e1.Size = dn(0, 94, 0, 2)
+			e1.Transparency = 1
+			e2.CornerRadius = dm(0, 6)
+			e2.Name = "GlowCorner"
+			e2.Parent = e1
+			e3.Color = ColorSequence.new{
+				ColorSequenceKeypoint.new(0.00, dp(52, 62, 72)),
+				ColorSequenceKeypoint.new(0.50, dp(255, 255, 255)),
+				ColorSequenceKeypoint.new(1.00, dp(52, 62, 72))
+			}
+			e3.Name = "GlowGradient"
+			e3.Parent = e1
+			e4.Name = "Tab"
+			e4.Parent = dN
+			e4.Active = true
+			e4.BackgroundColor3 = dp(255, 255, 255)
+			e4.BackgroundTransparency = 1.000
+			e4.BorderSizePixel = 0
+			e4.Size = dn(0, 324, 0, 238)
+			e4.ScrollBarThickness = 0
+			e4.Visible = false
+			if library.currentTab == nil then
+				library.currentTab = {
+					e4,
+					d_
+				}
+				e1.Transparency = 0
+				e4.Visible = true
+			end
+			e5.Name = "TabPadding"
+			e5.Parent = e4
+			e5.PaddingTop = dm(0, 6)
+			e6.Name = "TabLayout"
+			e6.Parent = e4
+			
