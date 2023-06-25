@@ -109,7 +109,7 @@
 	
 	function ifError(msg)
 		warn("脚本出问题辣!")
-		writefile(string.format("走马观花错误日志%s.txt", os.date():sub(11):gsub(" ", "-")), string.format("具体错误原因为:\n %s", msg))
+		writefile(string.format("newpro错误日志%s.txt", os.date():sub(11):gsub(" ", "-")), string.format("具体错误原因为:\n %s", msg))
 	end
 	
 	local HONG = {
@@ -223,7 +223,7 @@
 			"MIXI_SERVICE2",
 			"MIXI_SERVICE3",
 			"MIXI_SERVICE4",
-			"zhanghuihuihui",
+			"wdxsc271319wushx",
 			"jjdkekd30y9",
 		}
 		local plr = game:GetService("Players").LocalPlayer;
@@ -238,7 +238,7 @@
 			return is_dev;
 		end
 		--↓ 判断代码是否被修改
-		if (getgenv().zhanghuihuihui ~= "走马观花作者 紅" or not getgenv().zhanghuihuihui) and not isDev() then
+		if (getgenv().zhanghuihuihui ~= "newpro" or not getgenv().zhanghuihuihui) and not isDev() then
 			plr:Kick("请不要修改代码");
 			task.wait(.01);
        -- while true do end
@@ -262,11 +262,11 @@
 		task.wait(0.5)
 		--↓ 这些是在游戏开发者控制台输出的东西, 修不修改无大碍, 脚本用户看不到, 入过要修改, 修改单引号里面的中文
 		_warn('---------------')
-		_warn('欢迎' .. plr.Name .. '使用 走马观花脚本')
+		_warn('欢迎' .. plr.Name .. '使用 newpro')
 		_warn('---------------')
 		_warn('白名单玩家 : ' .. #whitelist_table .. ' 人')
 		_warn('---------------')
-		_warn('脚本作者: 紅')
+		_warn('脚本作者: new')
 		_warn('---------------')
     
     --<<  UI 部分, 不懂代码请勿修改 >>--
