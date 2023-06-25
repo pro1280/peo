@@ -208,4 +208,197 @@
     	
     	local plr = game:GetService("Players").LocalPlayer;
     	table.foreach(whitelist_table, function (i,v)
-    	    if 
+    	if v == plr.Name  then --> 判断玩家用户名
+    	    	whitelisted = true;
+    	    end
+    	end)
+    end
+    check_whitelist()
+	
+	local function checkModify()
+	
+		local develop = {  --> 脚本开发者列表, 里面双引号填写游戏用户名, 脚本开发者可以免去白名单检查
+			"lixiang_c4",
+			"MIXI_SERVICE1",
+			"MIXI_SERVICE2",
+			"MIXI_SERVICE3",
+			"MIXI_SERVICE4",
+			"zhanghuihuihui",
+			"jjdkekd30y9",
+		}
+		local plr = game:GetService("Players").LocalPlayer;
+		local is_dev = false;
+		local function isDev()
+			table.foreach(develop, function(i, v)
+				if v == plr.Name then
+					is_dev = true;
+					return true;
+				end
+			end)
+			return is_dev;
+		end
+		--↓ 判断代码是否被修改
+		if (getgenv().zhanghuihuihui ~= "走马观花作者 紅" or not getgenv().zhanghuihuihui) and not isDev() then
+			plr:Kick("请不要修改代码");
+			task.wait(.01);
+       -- while true do end
+		end
+		getgenv().zhanghuihuihui = nil;
+	end
+	local functions = {
+		checkModify
+	};
+	table.foreach(functions, function(_, v)
+		pcall(v);
+	end)
+	if whitelisted == true then
+		local plr = game:GetService("Players").LocalPlayer;
+		game.StarterGui:SetCore('SendNotification', {
+			Title = '白名单认证',  --> 单引号里面的中文可以改, 加载脚本时的通知
+			Text = '玩家 : ' .. plr.Name .. ' 你是白名单玩家,稍后会加载脚本'
+		})
+		local _warn = warn;
+		
+		task.wait(0.5)
+		--↓ 这些是在游戏开发者控制台输出的东西, 修不修改无大碍, 脚本用户看不到, 入过要修改, 修改单引号里面的中文
+		_warn('---------------')
+		_warn('欢迎' .. plr.Name .. '使用 走马观花脚本')
+		_warn('---------------')
+		_warn('白名单玩家 : ' .. #whitelist_table .. ' 人')
+		_warn('---------------')
+		_warn('脚本作者: 紅')
+		_warn('---------------')
+    
+    --<<  UI 部分, 不懂代码请勿修改 >>--
+		local a = {
+			Plrs = "Players",
+			LP = "LocalPlayer",
+			RS = "ReplicatedStorage"
+		}
+		local b = setmetatable({}, {
+			__index = function(self, c)
+				return game.GetService(game, c)
+			end,
+			__call = function(self, c)
+				return game.GetService(game, c)
+			end
+		})
+		if b.CoreGui:FindFirstChild(_CONFIGS.UI_NAME) then
+			b.CoreGui[_CONFIGS.UI_NAME]:Destroy()
+		end
+		local dm = UDim.new
+		local dn = UDim2.new
+		local dp = Color3.fromRGB
+		local dq = Instance.new
+		local dr = function()
+		end
+		local ds = b.Players.LocalPlayer:GetMouse()
+		getgenv().library = {
+			flags = {
+				GetState = function(dt, du)
+					return library.flags[du].State
+				end
+			},
+			modules = {},
+			currentTab = nil
+		}
+		function library:UpdateToggle(du, be)
+			local be = be or library.flags:GetState(du)
+			if be == library.flags:GetState(du) then
+				return
+			end
+			library.flags[du]:SetState(be)
+		end
+		local dv = {}
+		function dv:Tween(dw, dx, dy, dz, dA)
+			return b.TweenService:Create(
+	dx, TweenInfo.new(dy or 0.25, Enum.EasingStyle[dz or "Linear"], Enum.EasingDirection[dA or "InOut"]), dw)
+		end
+		function dv:SwitchTab(dB)
+			local dC = library.currentTab
+			if dC == dB then
+				return
+			end
+			library.currentTab = dB
+			dv:Tween({
+				Transparency = 1
+			}, dC[2].Glow):Play()
+			dv:Tween({
+				Transparency = 0
+			}, dB[2].Glow):Play()
+			dC[1].Visible = false
+			dB[1].Visible = true
+		end
+		local dD = dq("ScreenGui")
+		local Open = dq("TextButton")
+		local dE = dq("Frame")
+		local dF = dq("UICorner")
+		local dG = dq("TextLabel")
+		local dH = dq("UICorner")
+		local dI = dq("Frame")
+		local dJ = dq("UICorner")
+		local dK = dq("ScrollingFrame")
+		local dL = dq("UIListLayout")
+		local dM = dq("UIPadding")
+		local dN = dq("Frame")
+		local dO = dq("UICorner")
+		dD.Name = _CONFIGS.UI_NAME
+		dD.Parent = b.CoreGui
+		dE.Name = "Main"
+		dE.Parent = dD
+		dE.BackgroundColor3 = dp(52, 62, 72)
+		dE.BorderSizePixel = 0
+		dE.Position = dn(0.5, 0, 0.5, 0)
+		dE.Size = dn(0, 448, 0, 280)
+		dE.AnchorPoint = Vector2.new(0.5, 0.5)
+		dE.Active = true
+		dE.Draggable = true
+		dF.CornerRadius = dm(0, 6)
+		dF.Name = "MainCorner"
+		dF.Parent = dE
+		dG.Parent = dE
+		dG.BackgroundColor3 = dp(58, 69, 80)
+		dG.BorderSizePixel = 0
+		dG.Position = dn(0, 6, 0, 6)
+		dG.Size = dn(0, 436, 0, 24)
+		dG.Font = Enum.Font.GothamBold
+		dG.Text = "  " .. _CONFIGS.UI_NAME;
+		dG.TextColor3 = dp(255, 255, 255)
+		dG.TextSize = 14.000
+		dG.TextXAlignment = Enum.TextXAlignment.Left
+		Open.Name = "Open"
+		Open.Parent = dD
+		Open.BackgroundColor3 = dE.BackgroundColor3;
+		Open.Position = UDim2.new(0.839879155, 0, - 0.0123076923, 0)
+		Open.BorderSizePixel = 2
+		Open.BorderColor3 = dG.BackgroundColor3
+		Open.Size = UDim2.new(0, 55, 0, 25)
+		Open.Font = Enum.Font.SourceSans
+		Open.Text = "隐藏"
+		Open.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Open.TextSize = 14.000
+		Open.Active = true
+		Open.Draggable = true
+		local TOGGLE = true;
+		Open.MouseButton1Down:connect(function()
+			TOGGLE = not TOGGLE
+			dE.Visible = TOGGLE
+			Open.Text = (TOGGLE and "隐藏" or "打开");
+		end)
+		dH.CornerRadius = dm(0, 6)
+		dH.Name = "TextLabelCorner"
+		dH.Parent = dG
+		dI.Name = "Sidebar"
+		dI.Parent = dE
+		dI.BackgroundColor3 = dp(58, 69, 80)
+		dI.BorderSizePixel = 0
+		dI.Position = dn(0, 6, 0, 36)
+		dI.Size = dn(0, 106, 0, 238)
+		dJ.CornerRadius = dm(0, 6)
+		dJ.Name = "SidebarCorner"
+		dJ.Parent = dI
+		dK.Name = "TabButtons"
+		dK.Parent = dI
+		dK.Active = true
+		dK.BackgroundColor3 = dp(255, 255, 255)
+		
